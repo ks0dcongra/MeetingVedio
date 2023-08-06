@@ -30,11 +30,11 @@
             </div>
             <div class="ts-grid is-relaxed is-stretched u-top-spaced">
                 <div class="column is-11-wide">
-                    <!-- <div class="ts-image is-rounded">
-                        <img src="/static/images/x10.png" />
-                    </div> -->
                     <video width="800" height="500" controls>
-                        <source src="{{ .tempVideoFile }}" type="video/mp4">
+                        <!-- MongoDB use-->
+                        <source src="data:video/mp4;base64,{{ .tempVideoFile }}" type="video/mp4">
+                        <!-- General use-->
+                        <!-- <source src="{{ .tempVideoFile }}" type="video/mp4"> -->
                         <source src="{{ .tempVideoFile }}" type="video/ogg">
                         Your browser does not support the video tag.
                     </video>
