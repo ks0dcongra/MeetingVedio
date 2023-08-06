@@ -30,10 +30,16 @@
             </div>
             <div class="ts-grid is-relaxed is-stretched u-top-spaced">
                 <div class="column is-11-wide">
-                    <div class="ts-image is-rounded">
+                    <!-- <div class="ts-image is-rounded">
                         <img src="/static/images/x10.png" />
-                    </div>
+                    </div> -->
+                    <video width="800" height="500" controls>
+                        <source src="{{ .tempVideoFile }}" type="video/mp4">
+                        <source src="{{ .tempVideoFile }}" type="video/ogg">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
+                
                 <div class="column is-5-wide">
                     <div class="ts-segment is-padded is-secondary">
                         <div class="ts-progress">
@@ -52,11 +58,15 @@
                         <div class="ts-text is-description">剩餘天數</div>
                         <!-- 上傳影片按鈕 -->
                         <form enctype="multipart/form-data" action="/upload" method="post">
-                            <input type="file" name="uploadfile" />
-                            <input type="hidden" name="token" value="{{.}}"/>
-                            <button class="ts-button is-fluid is-start-icon u-top-spaced-large" type="submit" value="upload">
+                            <div class="ts-wrap u-top-spaced">
+                                <label for="file-upload" class="custom-file-upload is-circular">
+                                    <span class="ts-icon is-video-icon"></span> Upload Video
+                                </label>
+                                <input id="file-upload" type="file" name="myFile" />
+                            </div>
+                            <button for="file-upload" class="ts-button is-fluid is-start-icon u-top-spaced-large" type="submit" value="upload">
                                 <span class="ts-icon is-heart-icon"></span>
-                                上傳影片
+                                Submit
                             </button>
                         </form>
                        
@@ -80,7 +90,8 @@
                 <div class="column is-3-wide"></div>
                 <div class="column is-9-wide">
                     <h3>
-                        <p>使用教學在下面
+                        <p class="tutorial-header">
+                            使用教學在下面
                         </br>
                             Web tutorial at the bottom
                         </p>
@@ -223,5 +234,12 @@
         <p>&copy; 2023 MeetingVedioHelper. All rights reserved.</p>
     </footer>
     <script src="/static/dist/tocas.min.js"></script>
+    <!--在Go模板中使用Go的模板引擎輸出err變數的值，並使用alert()顯示錯誤消息-->
+    <script>
+        var errMsg = "{{ .err }}";
+        if (errMsg !== "") {
+            alert(errMsg);
+        }
+    </script>
 </body>
 </html>

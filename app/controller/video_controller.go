@@ -1,15 +1,17 @@
 package controller
 
 import (
-	"fmt"
-	"context"
-	"net/http"
 	"MeetingVideoHelper/app/model"
 	"MeetingVideoHelper/database"
+	"context"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+
 	"github.com/gin-gonic/gin"
 
 	"go.mongodb.org/mongo-driver/bson"
-
 )
 
 type UserController struct {
@@ -22,7 +24,51 @@ func NewUserController() *UserController {
 	}
 }
 
-// GET
+// upload file
+func UploadFile(c *gin.Context) {
+	// Maximum upload of 10 MB files
+	c.Request.ParseMultipartForm(10 << 20)
+
+	// Get handler for filename, size and headers
+	file, handler, err := c.Request.FormFile("myFile")
+	if err != nil {
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
+		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+			"err":  "Error Retrieving the File",
+		})
+	}
+
+	defer file.Close()
+	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+	fmt.Printf("File Size: %+v\n", handler.Size)
+	fmt.Printf("MIME Header: %+v\n", handler.Header)
+
+	// Create file in the temp folder
+	dstPath := "./static/videos/" + handler.Filename
+	dst, err := os.Create(dstPath)
+	defer dst.Close()
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+			"err":  err.Error(),
+		})
+	}
+
+	// Copy the uploaded file to the created file on the filesystem
+	if _, err := io.Copy(dst, file); err != nil {
+		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+			"err":  err.Error(),
+		})
+	}
+	fmt.Printf("這裡: %+v\n", dstPath)
+	// successfully uploaded file
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"err":  "Successfully Uploaded File",
+		"tempVideoFile": dstPath,
+	})
+}
+
+// FindAllVideo GET Mongo
 func FindAllVideo(c *gin.Context) {
 	videos := FindAllVideoRepo()
 	c.JSON(http.StatusOK, videos)
@@ -37,10 +83,9 @@ func FindAllVideoRepo() []model.Video {
 	return videos
 }
 
-// POST
+// CreateVideo POST Mongo
 func CreateVideo(c *gin.Context) {
 	var video model.Video
-	// c.BindJSON(&video)
 	CreateVideoRepo(video)
 	c.JSON(http.StatusOK, video)
 }
