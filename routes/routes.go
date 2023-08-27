@@ -16,7 +16,7 @@ func ApiRoutes(router *gin.Engine) {
 
 	// rander index.html
 	router.GET("/index", func(c *gin.Context) {
-		c.HTML(200, "index.html", map[string]string{"title":"home"})
+		c.HTML(200, "index.html", map[string]string{"title": "home"})
 	})
 	// download file
 	router.GET("/download/:filename", func(c *gin.Context) {

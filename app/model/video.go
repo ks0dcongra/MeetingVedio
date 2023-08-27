@@ -5,7 +5,7 @@ import (
 )
 
 type Video struct {
-	ID        primitive.ObjectID 	`bson:"vid"`
-	Title     string        		`bson:"title"`
-	VideoData []byte        		`bson:"video_data"`
+	ID        primitive.ObjectID `bson:"vid"`
+	Title     string             `bson:"title"`
+	VideoData []byte             `bson:"video_data"`
 }

@@ -53,9 +53,9 @@
                         </div>
                         <button style="visibility: hidden;"></button>
                         <div class="ts-box is-hollowed">
-                            <div class="ts-blankslate is-interactive">
-                                <div class="header">上傳圖片或影音</div>
-                                <div class="description">將圖片拖拉至此處進行上傳</div>
+                            <div class="ts-blankslate is-interactive" id="drop-area">
+                                <div class="header">上傳影片</div>
+                                <div class="description">將影片拖拉至此處進行上傳</div>
                             </div>
                         </div>
                         <!-- 上傳影片按鈕 -->
@@ -147,9 +147,9 @@
 <script src="/static/dist/tocas.min.js"></script>
 <!--在Go模板中使用Go的模板引擎輸出err變數的值，並使用alert()顯示錯誤消息-->
 <script>
-    var errMsg = "{{ .err }}";
-    if (errMsg !== "") {
-        alert(errMsg);
+    var successMsg = "{{ .successMsg }}";
+    if (successMsg !== "") {
+        alert(successMsg);
     }
  </script>
 <script>

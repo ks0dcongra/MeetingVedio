@@ -19,13 +19,13 @@ const (
 )
 
 var dsn = fmt.Sprintf("postgresql://%v:%v@%v:%v/%v?sslmode=disable",
-    UserName,
-    Password,
-    Addr,
-    Port,
-    Database,
+	UserName,
+	Password,
+	Addr,
+	Port,
+	Database,
 )
-	
+
 var DB *gorm.DB
 
 func DBinit() {
@@ -45,4 +45,3 @@ func DBinit() {
 
 	fmt.Println("Database connected!")
 }
-

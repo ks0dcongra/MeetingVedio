@@ -17,13 +17,10 @@ import (
 )
 
 type UserController struct {
-	
 }
 
 func NewUserController() *UserController {
-	return &UserController{
-		
-	}
+	return &UserController{}
 }
 
 // upload file
@@ -37,7 +34,7 @@ func UploadFile(c *gin.Context) {
 		fmt.Println("Error Retrieving the File")
 		fmt.Println(err)
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
-			"err":  "Error Retrieving the File",
+			"err": "Error Retrieving the File",
 		})
 	}
 
@@ -52,14 +49,14 @@ func UploadFile(c *gin.Context) {
 	defer dst.Close()
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
-			"err":  err.Error(),
+			"err": err.Error(),
 		})
 	}
 
 	// General: Copy the uploaded file to the created file on the filesystem
 	if _, err := io.Copy(dst, file); err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
-			"err":  err.Error(),
+			"err": err.Error(),
 		})
 	}
 
@@ -71,11 +68,11 @@ func UploadFile(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "Error Reading the File")
 		return
 	}
-	
+
 	// MongoDB: insert data to mongodb
 	video := model.Video{
-		ID:primitive.NewObjectID(),
-		Title: handler.Filename,
+		ID:        primitive.NewObjectID(),
+		Title:     handler.Filename,
 		VideoData: data,
 	}
 	_, err = database.QmgoConnection.InsertOne(context.Background(), video)
@@ -86,7 +83,7 @@ func UploadFile(c *gin.Context) {
 
 	// MongoDB: find one specific video from mongodb
 	var videoResult model.Video
-	err = database.QmgoConnection.Find(context.Background(), bson.M{"title": handler.Filename, "vid":video.ID}).One(&videoResult)
+	err = database.QmgoConnection.Find(context.Background(), bson.M{"title": handler.Filename, "vid": video.ID}).One(&videoResult)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "MongoDB: Error Finding the File")
 		return
@@ -95,10 +92,10 @@ func UploadFile(c *gin.Context) {
 	// MongoDB: Convert the VideoData to base64 encoding
 	videoBase64 := base64.StdEncoding.EncodeToString(videoResult.VideoData)
 	dstPath = videoBase64
-	
-	// uploaded file successfully 
+
+	// uploaded file successfully
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"err":  "Successfully Uploaded File",
+		"successMsg":    "Uploaded File Successfully ",
 		"tempVideoFile": dstPath,
 	})
 }
@@ -113,7 +110,7 @@ func FindAllVideoRepo() []model.Video {
 	var videos []model.Video
 	database.QmgoConnection.Find(context.TODO(), bson.M{}).All(&videos)
 	for _, video := range videos {
-		fmt.Printf("%+v",video)
+		fmt.Printf("%+v", video)
 	}
 	return videos
 }
@@ -125,29 +122,29 @@ func CreateVideo(c *gin.Context) {
 	c.JSON(http.StatusOK, video)
 }
 
-func CreateVideoRepo(video model.Video){
+func CreateVideoRepo(video model.Video) {
 	videoInfo := []model.Video{
 		{
-			ID:primitive.NewObjectID(),
-			Title: "Test1",
-			VideoData:[]byte("123456"),
+			ID:        primitive.NewObjectID(),
+			Title:     "Test1",
+			VideoData: []byte("123456"),
 		},
 		{
-			ID:primitive.NewObjectID(),
-			Title: "Test2",
-			VideoData:[]byte("123456"),
+			ID:        primitive.NewObjectID(),
+			Title:     "Test2",
+			VideoData: []byte("123456"),
 		},
 		{
-			ID:primitive.NewObjectID(),
-			Title: "Test3",
-			VideoData:[]byte("123456"),
+			ID:        primitive.NewObjectID(),
+			Title:     "Test3",
+			VideoData: []byte("123456"),
 		},
 	}
 	result, err := database.QmgoConnection.InsertMany(context.TODO(), videoInfo)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("%+v\n",result)
+	fmt.Printf("%+v\n", result)
 	return
 }
 
