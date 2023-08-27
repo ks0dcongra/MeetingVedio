@@ -30,7 +30,7 @@
             </div>
             <div class="ts-grid is-relaxed is-stretched u-top-spaced">
                 <div class="column is-11-wide">
-                    <video width="800" height="500" controls>
+                    <video width="100%" height="100%" controls>
                         <!-- MongoDB use-->
                         <source src="data:video/mp4;base64,{{ .tempVideoFile }}" type="video/mp4">
                         <!-- General use-->
@@ -51,55 +51,31 @@
                             </div>
                             <div class="column"><div class="ts-text is-large">83%</div></div>
                         </div>
-                        <div class="ts-text is-description">總目標 NT$ 1,000,000</div>
-                        <div class="ts-header is-big is-heavy u-top-spaced">194</div>
-                        <div class="ts-text is-description">贊助者</div>
-                        <div class="ts-header is-big is-heavy u-top-spaced">163</div>
-                        <div class="ts-text is-description">剩餘天數</div>
+                        <button style="visibility: hidden;"></button>
+                        <div class="ts-box is-hollowed">
+                            <div class="ts-blankslate is-interactive">
+                                <div class="header">上傳圖片或影音</div>
+                                <div class="description">將圖片拖拉至此處進行上傳</div>
+                            </div>
+                        </div>
                         <!-- 上傳影片按鈕 -->
-                        <form enctype="multipart/form-data" action="/upload" method="post">
-                            <div class="ts-wrap u-top-spaced">
+                        <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
+                            <button for="file-upload" type="submit" value="upload" style="visibility: hidden;"></button>
+                            <div class="ts-wrap u-top-spaced ts-button">
                                 <label for="file-upload" class="custom-file-upload is-circular">
-                                    <span class="ts-icon is-video-icon"></span> Upload Video
+                                    <span class="ts-icon is-video-icon "></span> Upload Video
                                 </label>
                                 <input id="file-upload" type="file" name="myFile" />
                             </div>
-                            <button for="file-upload" class="ts-button is-fluid is-start-icon u-top-spaced-large" type="submit" value="upload">
-                                <span class="ts-icon is-heart-icon"></span>
-                                Submit
-                            </button>
                         </form>
-                       
-                        <div class="ts-wrap is-center-aligned u-top-spaced">
-                            <a href="#!" class="ts-icon is-secondary is-facebook-icon is-circular is-large"></a>
-                            <a href="#!" class="ts-icon is-secondary is-twitter-icon is-circular is-large"></a>
-                            <a href="#!" class="ts-icon is-secondary is-google-plus-icon is-circular is-large"></a>
-                            <a href="#!" class="ts-icon is-secondary is-instagram-icon is-circular is-large"></a>
-                        </div>
-                        <div class="ts-text is-description is-center-aligned u-top-spaced-small">2022/12/31 23:59 截止</div>
+
+                        <div class="ts-text is-description is-center-aligned u-top-spaced-small">Andy Is Handsome</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="ts-divider"></div>
-    <!-- 下半部 -->
-    <div class="ts-content is-tertiary is-dense">
-        <div class="ts-container">
-            <div class="ts-grid is-relaxed">
-                <div class="column is-3-wide"></div>
-                <div class="column is-9-wide">
-                    <h3>
-                        <p class="tutorial-header">
-                            使用教學在下面
-                        </br>
-                            Web tutorial at the bottom
-                        </p>
-                    </h3>
-                </div>
-            </div>
-        </div>
-    </div>
+     <!-- 下半部 -->
     <div class="ts-container u-vertically-padded-big">
         <div class="ts-grid is-relaxed">
             <div class="column is-3-wide">
@@ -110,7 +86,7 @@
                     <a href="#!" class="item">相關連結</a>
                 </div>
             </div>
-            <div class="column is-9-wide">
+            <div class="column is-13-wide">
                 <p>Code Liquid is a 3D RPG Hentai Game that combines Sci-Fi and Fantasy elements.</p>
                 <p>
                     At the time of the village's destruction, the player will take on the role of a hero who will save it from the crisis. In addition to the most basic way to
@@ -156,90 +132,33 @@
                 <strong>▌ Dev Blog / 開發日誌：</strong><br />
                 <a href="https://dev.code-liquid.io/">https://dev.code-liquid.io/</a><br />
 
-                <div class="ts-segment is-very-padded is-secondary u-top-spaced-big">
-                    <div class="ts-header is-center-aligned is-large is-heavy">對這個專案有興趣嗎？<br />現在就訂閱我們的電子報！</div>
-                    <div class="ts-grid is-middle-aligned u-top-spaced-big">
-                        <div class="column is-fluid">
-                            <div class="ts-input is-large">
-                                <input type="text" placeholder="電子信箱地址…" />
-                            </div>
-                        </div>
-                        <div class="column">
-                            <button class="ts-button is-start-icon">
-                                <span class="ts-icon is-envelope-icon"></span>
-                                訂閱
-                            </button>
-                        </div>
-                    </div>
-                </div>
+               
                 <div class="ts-meta is-secondary is-center-aligned u-top-spaced">
                     <a href="#!" class="item">使用者條約</a>
                     <a href="#!" class="item">隱私政策</a>
                     <a href="#!" class="item">聯繫我們</a>
                 </div>
+                <footer class="ts-text is-center-aligned is-description u-top-spaced">
+                    <p>&copy; 2023 MeetingVedioHelper. All rights reserved.</p>
+                </footer>
             </div>
-            <div class="column is-4-wide">
-                <div class="ts-segment is-padded">
-                    <div class="ts-image is-rounded">
-                        <img src="./../assets/images/16-9.png" />
-                    </div>
-                    <div class="ts-header is-large is-heavy u-top-spaced">NT$380</div>
-                    <div class="ts-header is-secondary is-heavy">數位遊戲版</div>
-                    <div class="u-top-spaced">包含：</div>
-                    <div class="ts-list is-small is-unordered">
-                        <div class="item">Steam 數位下載序號一組</div>
-                        <div class="item">動態桌布</div>
-                        <div class="item">限定官方 Discord 贊助者身份組</div>
-                    </div>
-                    <div class="ts-badge u-top-spaced-small">153 位贊助者</div>
-                    <button class="ts-button is-fluid is-outlined u-top-spaced">已額滿</button>
-                </div>
-                <div class="ts-segment is-padded u-top-spaced">
-                    <div class="ts-image is-rounded">
-                        <img src="./../assets/images/16-9.png" />
-                    </div>
-                    <div class="ts-header is-large is-heavy u-top-spaced">NT$520</div>
-                    <div class="ts-header is-secondary is-heavy">數位原聲帶同梱包</div>
-                    <div class="u-top-spaced">包含：</div>
-                    <div class="ts-list is-small is-unordered">
-                        <div class="item">Steam 數位下載序號一組</div>
-                        <div class="item">動態桌布</div>
-                        <div class="item">FLAC 高音質原聲帶</div>
-                        <div class="item">限定官方 Discord 贊助者身份組</div>
-                    </div>
-                    <div class="ts-badge u-top-spaced-small">137 位贊助者</div>
-                    <button class="ts-button is-fluid is-outlined u-top-spaced">已額滿</button>
-                </div>
-                <div class="ts-segment is-padded u-top-spaced">
-                    <div class="ts-image is-rounded">
-                        <img src="./../assets/images/16-9.png" />
-                    </div>
-                    <div class="ts-header is-large is-heavy u-top-spaced">NT$990</div>
-                    <div class="ts-header is-secondary is-heavy">實體典藏版</div>
-                    <div class="u-top-spaced">包含：</div>
-                    <div class="ts-list is-small is-unordered">
-                        <div class="item">實體雷雕 USB 隨身碟</div>
-                        <div class="item">動態桌布</div>
-                        <div class="item">1:1000 主角模型</div>
-                        <div class="item">FLAC 高音質原聲帶</div>
-                        <div class="item">限定官方 Discord 贊助者身份組</div>
-                    </div>
-                    <div class="ts-badge u-top-spaced-small">15 位贊助者</div>
-                    <button class="ts-button is-fluid u-top-spaced">贊助</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <footer class="ts-text is-center-aligned is-description u-top-spaced">
-        <p>&copy; 2023 MeetingVedioHelper. All rights reserved.</p>
-    </footer>
-    <script src="/static/dist/tocas.min.js"></script>
-    <!--在Go模板中使用Go的模板引擎輸出err變數的值，並使用alert()顯示錯誤消息-->
-    <script>
-        var errMsg = "{{ .err }}";
-        if (errMsg !== "") {
-            alert(errMsg);
-        }
-    </script>
 </body>
 </html>
+<script src="/static/dist/tocas.min.js"></script>
+<!--在Go模板中使用Go的模板引擎輸出err變數的值，並使用alert()顯示錯誤消息-->
+<script>
+    var errMsg = "{{ .err }}";
+    if (errMsg !== "") {
+        alert(errMsg);
+    }
+ </script>
+<script>
+    const form = document.getElementById('upload-form');
+    const fileInput = document.getElementById('file-upload');
+        
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            form.submit();
+        }
+    });
+ </script>
