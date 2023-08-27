@@ -96,7 +96,7 @@ func UploadFile(c *gin.Context) {
 	videoBase64 := base64.StdEncoding.EncodeToString(videoResult.VideoData)
 	dstPath = videoBase64
 	
-	// General: successfully uploaded file
+	// uploaded file successfully 
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"err":  "Successfully Uploaded File",
 		"tempVideoFile": dstPath,
@@ -124,6 +124,7 @@ func CreateVideo(c *gin.Context) {
 	CreateVideoRepo(video)
 	c.JSON(http.StatusOK, video)
 }
+
 func CreateVideoRepo(video model.Video){
 	videoInfo := []model.Video{
 		{
