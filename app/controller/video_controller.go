@@ -7,8 +7,13 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+
+	"os/exec"
+
 	"net/http"
 	"os"
+
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -25,6 +30,10 @@ func NewUserController() *UserController {
 
 // upload file
 func UploadFile(c *gin.Context) {
+	// ============================== Get upload file ==============================
+
+	var videoResult model.Video
+
 	// General: maximum upload of 10 MB files
 	c.Request.ParseMultipartForm(10 << 20)
 
@@ -43,6 +52,7 @@ func UploadFile(c *gin.Context) {
 	fmt.Printf("File Size: %+v\n", handler.Size)
 	fmt.Printf("MIME Header: %+v\n", handler.Header)
 
+	// ============================== Store in local directory ==============================
 	// General: Create file in the temp folder
 	dstPath := "./static/videos/" + handler.Filename
 	dst, err := os.Create(dstPath)
@@ -60,108 +70,117 @@ func UploadFile(c *gin.Context) {
 		})
 	}
 
+	// ============================== Insert to MongoDB ==============================
 	// MongoDB operation
 	file.Seek(0, 0) // Reset the file pointer to the beginning of the file
 	// MongoDB: Read the uploaded file data
 	data, err := io.ReadAll(file)
 	if err != nil {
-		c.String(http.StatusInternalServerError, "Error Reading the File")
+		c.JSON(http.StatusInternalServerError, "Error Reading the File")
 		return
 	}
 
 	// MongoDB: insert data to mongodb
-	video := model.Video{
+	insertVideo := model.Video{
 		ID:        primitive.NewObjectID(),
 		Title:     handler.Filename,
 		VideoData: data,
+		UpdatedAt: time.Now(),
 	}
-	_, err = database.QmgoConnection.InsertOne(context.Background(), video)
+
+	// _, err = database.QmgoConnection.InsertOne(context.Background(), video)
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, "MongoDB: Error Inserting the File")
+	// 	return
+	// } else {
+	// ============================== Reverse video ==============================
+	// 写入视频数据到临时文件
+	// err = database.QmgoConnection.Find(context.Background(), bson.M{"title": insertVideo.Title, "vid": insertVideo.ID}).One(&videoResult)
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, "MongoDB: Error Finding the File")
+	// 	return
+	// }
+
+	tempVideo, err := os.Create("./tempVideo.mp4")
 	if err != nil {
-		c.String(http.StatusInternalServerError, "MongoDB: Error Inserting the File")
+		fmt.Println("Error creating temporary file:", err)
 		return
 	}
 
-	// MongoDB: find one specific video from mongodb
-	var videoResult model.Video
-	err = database.QmgoConnection.Find(context.Background(), bson.M{"title": handler.Filename, "vid": video.ID}).One(&videoResult)
+	defer tempVideo.Close()
+	tempVideo.Write(insertVideo.VideoData)
+
+	inputFilePath := tempVideo.Name()
+
+	// 复制原始视频
+	copyCmd := exec.Command("ffmpeg", "-i", inputFilePath, "-c:v", "copy", "copyVideo.mp4")
+	copyCmd.Stdout = os.Stdout
+	copyCmd.Stderr = os.Stderr
+
+	err = copyCmd.Run()
 	if err != nil {
-		c.String(http.StatusInternalServerError, "MongoDB: Error Finding the File")
+		fmt.Println("Error copying video:", err)
+		return
+	}
+
+	// 逆转复制的视频
+	// reverseCmd := exec.Command("ffmpeg", "-i", "copyVideo.mp4", "-vf", "reverse", "-af", "areverse", "reversedCopyVideo.mp4")
+	// reverseCmd.Stdout = os.Stdout
+	// reverseCmd.Stderr = os.Stderr
+
+	// err = reverseCmd.Run()
+	// if err != nil {
+	// 	fmt.Println("Error reversing video:", err)
+	// 	return
+	// }
+
+	// 串接视频
+	// finalCmd := exec.Command("ffmpeg", "-safe", "0", "-f", "concat", "copyVideo.mp4", "-c:v ", "copy", "-c:a ", "copy", "copyVideo2.mp4")
+	// finalCmd := exec.Command("ffmpeg", "-f", "concat", "-i", "../../tempVideo.mp4", "../../copyVideo.mp4")
+	finalCmd := exec.Command("ffmpeg", "-i", "./tempVideo.mp4", "-i", "./copyVideo.mp4", "-filter_complex", "[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1[outv][outa]", "-map", "[outv]", "-map", "[outa]", "./flipped.mp4")
+	finalCmd.Stdout = os.Stdout
+	finalCmd.Stderr = os.Stderr
+	// ffmpeg -i 要被串接的影音檔案路徑1 -i 要被串接的影音檔案路徑2 -i 要被串接的影音檔案路徑3 -filter_complex "[0:v][0:a][1:v][1:a][2:v][2:a]concat=n=3:v=1:a=1[outv][outa]" -map "[outv]" -map "[outa]" 輸出的影片檔案路徑
+
+	err = finalCmd.Run()
+	if err != nil {
+		fmt.Println("Error concat video:", err)
+		return
+	}
+
+	// 删除临时文件
+	// if err := os.Remove("copy.mp4"); err != nil {
+	//     fmt.Println("Error deleting temporary file:", err)
+	// }
+
+	// if err := os.Remove("flipped.mp4"); err != nil {
+	//     fmt.Println("Error deleting temporary file:", err)
+	// }\
+	// _, err = database.QmgoConnection.InsertOne(context.Background(), bson.M{
+	// 	"title":      "Flipped Video",
+	// 	"video_data": outputBuffer.Bytes(),
+	// })
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, "MongoDB: Error Inserting the File")
+	// 	return
+	// }
+	// }
+
+	// ============================== Render to index.html ==============================
+	// MongoDB: find one specific video from mongodb
+	err = database.QmgoConnection.Find(context.Background(), bson.M{"title": handler.Filename, "vid": insertVideo.ID}).One(&videoResult)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "MongoDB: Error Finding the File")
 		return
 	}
 
 	// MongoDB: Convert the VideoData to base64 encoding
 	videoBase64 := base64.StdEncoding.EncodeToString(videoResult.VideoData)
-	dstPath = videoBase64
 
 	// uploaded file successfully
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"successMsg":    "Uploaded File Successfully ",
-		"tempVideoFile": dstPath,
+		"err":           "",
+		"tempVideoFile": videoBase64,
 	})
 }
-
-// FindAllVideo GET Mongo
-func FindAllVideo(c *gin.Context) {
-	videos := FindAllVideoRepo()
-	c.JSON(http.StatusOK, videos)
-}
-
-func FindAllVideoRepo() []model.Video {
-	var videos []model.Video
-	database.QmgoConnection.Find(context.TODO(), bson.M{}).All(&videos)
-	for _, video := range videos {
-		fmt.Printf("%+v", video)
-	}
-	return videos
-}
-
-// CreateVideo POST Mongo
-func CreateVideo(c *gin.Context) {
-	var video model.Video
-	CreateVideoRepo(video)
-	c.JSON(http.StatusOK, video)
-}
-
-func CreateVideoRepo(video model.Video) {
-	videoInfo := []model.Video{
-		{
-			ID:        primitive.NewObjectID(),
-			Title:     "Test1",
-			VideoData: []byte("123456"),
-		},
-		{
-			ID:        primitive.NewObjectID(),
-			Title:     "Test2",
-			VideoData: []byte("123456"),
-		},
-		{
-			ID:        primitive.NewObjectID(),
-			Title:     "Test3",
-			VideoData: []byte("123456"),
-		},
-	}
-	result, err := database.QmgoConnection.InsertMany(context.TODO(), videoInfo)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("%+v\n", result)
-	return
-}
-
-// Create User
-// func (h *UserController) CreateUser() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		requestData := new(model.Student)
-// 		if err := c.ShouldBindJSON(&requestData); err != nil {
-// 			fmt.Println("Error:" + err.Error())
-// 			c.JSON(http.StatusNotAcceptable, responses.Status(responses.ParameterErr, nil))
-// 			return
-// 		}
-// 		student_id, status := service.NewUserService().CreateUser(requestData)
-// 		if status != responses.Success {
-// 			c.JSON(http.StatusNotFound, responses.Status(responses.Error, nil))
-// 			return
-// 		}
-// 		c.JSON(http.StatusOK, responses.Status(responses.Success, student_id))
-// 	}
-// }

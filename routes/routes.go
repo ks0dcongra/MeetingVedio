@@ -33,7 +33,7 @@ func ApiRoutes(router *gin.Engine) {
 	// upload file
 	router.POST("/upload", controller.UploadFile)
 	// create video
-	router.POST("/createVideos", controller.CreateVideo)
+	// router.POST("/createVideos", controller.CreateVideo)
 	// find all videos
-	router.GET("/videos", controller.FindAllVideo)
+	// router.GET("/videos", controller.FindAllVideo)
 }
