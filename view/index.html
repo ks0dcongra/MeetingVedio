@@ -30,7 +30,7 @@
             </div>
             <div class="ts-grid is-relaxed is-stretched u-top-spaced">
                 <div class="column is-11-wide">
-                    <video width="100%" height="100%" controls>
+                    <video width="100%" height="100%" id="{{ .videoID }}" controls>
                         <!-- MongoDB use-->
                         <source src="data:video/mp4;base64,{{ .tempVideoFile }}" type="video/mp4">
                         <!-- General use-->
