@@ -60,7 +60,7 @@
                         </div>
                         <!-- 上傳影片按鈕 -->
                         <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
-                            <button for="file-upload" type="submit" value="upload" style="visibility: hidden;"></button>
+                            <!-- <button for="file-upload" type="submit" value="upload" style="visibility: hidden;"></button> -->
                             <div class="ts-wrap u-top-spaced ts-button">
                                 <label for="file-upload" class="custom-file-upload is-circular">
                                     <span class="ts-icon is-video-icon "></span> Upload Video
@@ -68,7 +68,25 @@
                                 <input id="file-upload" type="file" name="myFile" />
                             </div>
                         </form>
-
+                        
+                        <!-- 下載影片按鈕 -->
+                        <form id="file-download" action="/downloads" method="post">                             
+                            <input type="hidden" name="videoID" value="{{ .videoID }}">
+                        </form>
+                        <div class="ts-wrap u-top-spaced ts-button" onclick="submitForm()">
+                            <label class="is-circular">
+                                <span class="ts-icon is-download-icon "></span> Download Video
+                            </label>
+                        </div>
+                       
+                        <script>
+                            function submitForm() {
+                                // 获取表单元素
+                                var form = document.getElementById('file-download');
+                                // 提交表单
+                                form.submit();
+                            }
+                        </script>
                         <div class="ts-text is-description is-center-aligned u-top-spaced-small">Andy Is Handsome</div>
                     </div>
                 </div>

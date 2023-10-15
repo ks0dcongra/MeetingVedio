@@ -18,7 +18,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	// "go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -80,7 +80,7 @@ func UploadFile(c *gin.Context) {
 
 	// MongoDB: insert data to mongodb
 	insertVideo := model.Video{
-		ID:        primitive.NewObjectID(),
+		VID:       primitive.NewObjectID(),
 		Title:     handler.Filename,
 		VideoData: data,
 		UpdatedAt: time.Now(),
@@ -169,7 +169,7 @@ func UploadFile(c *gin.Context) {
 	}
 
 	insertFlippedVideo := model.Video{
-		ID:        primitive.NewObjectID(),
+		VID:       primitive.NewObjectID(),
 		Title:     "flippedVideo",
 		VideoData: data2,
 		UpdatedAt: time.Now(),
@@ -181,17 +181,17 @@ func UploadFile(c *gin.Context) {
 		return
 	}
 
-	log.Println("insertFlippedVideo.Title: ", insertFlippedVideo.Title)
-	log.Println("insertFlippedVideo.ID: ", insertFlippedVideo.ID)
+	// log.Println("insertFlippedVideo.Title: ", insertFlippedVideo.Title)
+	log.Println("insertFlippedVideo.ID: ", insertFlippedVideo.VID)
 	// ============================== Render to index.html ==============================
 
-	// var videoResult model.Video
+	var videoResult model.Video
 	// MongoDB: find one specific video from mongodb
-	// err = database.QmgoConnection.Find(context.Background(), bson.M{"title": insertFlippedVideo.Title , "vid": insertFlippedVideo.ID}).One(&videoResult)
-	// if err != nil {
-	// 	c.JSON(http.StatusInternalServerError, "MongoDB: Finding the insertFlippedVideo fail")
-	// 	return
-	// }
+	err = database.QmgoConnection.Find(context.Background(), bson.M{"vid": insertFlippedVideo.VID}).One(&videoResult)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "MongoDB: Finding the insertFlippedVideo fail")
+		return
+	}
 
 	// MongoDB: Convert the VideoData to base64 encoding
 	videoBase64 := base64.StdEncoding.EncodeToString(insertFlippedVideo.VideoData)
@@ -201,6 +201,6 @@ func UploadFile(c *gin.Context) {
 		"successMsg":    "Uploaded File Successfully ",
 		"err":           "",
 		"tempVideoFile": videoBase64,
-		"videoID":       insertFlippedVideo.ID,
+		"videoID":       insertFlippedVideo.VID,
 	})
 }
