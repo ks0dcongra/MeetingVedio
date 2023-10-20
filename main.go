@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// connect database
-	database.DBinit()
+	database.MongoDBinit()
 
 	mainServer := gin.New()
 	// 定義router呼叫格式與跨域限制

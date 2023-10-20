@@ -28,7 +28,7 @@ var dsn = fmt.Sprintf("postgresql://%v:%v@%v:%v/%v?sslmode=disable",
 
 var DB *gorm.DB
 
-func DBinit() {
+func PostgresDBinit() {
 	for {
 		var err error
 		println(dsn)

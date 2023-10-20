@@ -135,19 +135,27 @@ func UploadFile(c *gin.Context) {
 	// finalCmd := exec.Command("ffmpeg", "-safe", "0", "-f", "concat", "copyVideo.mp4", "-c:v ", "copy", "-c:a ", "copy", "copyVideo2.mp4")
 	// finalCmd := exec.Command("ffmpeg", "-f", "concat", "-i", "../../tempVideo.mp4", "../../copyVideo.mp4")
 	// ffmpeg -i 要被串接的影音檔案路徑1 -i 要被串接的影音檔案路徑2 -i 要被串接的影音檔案路徑3 -filter_complex "[0:v][0:a][1:v][1:a][2:v][2:a]concat=n=3:v=1:a=1[outv][outa]" -map "[outv]" -map "[outa]" 輸出的影片檔案路徑
-	finalCmd := exec.Command("ffmpeg", "-i", "./tempVideo.mp4", "-i", "./reversedVideo.mp4", "-filter_complex", "[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1[outv][outa]", "-map", "[outv]", "-map", "[outa]", "-n", "./flippedVideo.mp4")
-	finalCmd.Stdout = os.Stdout
-	finalCmd.Stderr = os.Stderr
+	// TODO:這裡暫時註解，加速測試
+	// finalCmd := exec.Command("ffmpeg", "-i", "./tempVideo.mp4", "-i", "./reversedVideo.mp4", "-filter_complex", "[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1[outv][outa]", "-map", "[outv]", "-map", "[outa]", "-n", "./flippedVideo.mp4")
+	// finalCmd.Stdout = os.Stdout
+	// finalCmd.Stderr = os.Stderr
 
-	err = finalCmd.Run()
-	if err != nil {
-		fmt.Println("Error concat video:", err)
-		return
-	}
+	// TODO:這裡暫時註解，加速測試
+	// err = finalCmd.Run()
+	// if err != nil {
+	// 	fmt.Println("Error concat video:", err)
+	// 	return
+	// }
 
 	// 删除临时文件
 	if err := os.Remove("tempVideo.mp4"); err != nil {
 		fmt.Println("deleting tempVideo fail", err)
+	}
+
+	data2, err := os.ReadFile("./reversedVideo.mp4")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "Error Reading the File")
+		return
 	}
 
 	if err := os.Remove("reversedVideo.mp4"); err != nil {
@@ -158,15 +166,17 @@ func UploadFile(c *gin.Context) {
 	file.Seek(0, 0) // Reset the file pointer to the beginning of the file
 	// MongoDB: Read the uploaded file data
 
-	data2, err := os.ReadFile("./flippedVideo.mp4")
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Error Reading the File")
-		return
-	}
+	// TODO:這裡暫時註解，加速測試
+	// data2, err := os.ReadFile("./flippedVideo.mp4")
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, "Error Reading the File")
+	// 	return
+	// }
 
-	if err := os.Remove("flippedVideo.mp4"); err != nil {
-		fmt.Println("deleting flippedVideo fail", err)
-	}
+	// TODO:這裡暫時註解，加速測試
+	// if err := os.Remove("flippedVideo.mp4"); err != nil {
+	// 	fmt.Println("deleting flippedVideo fail", err)
+	// }
 
 	insertFlippedVideo := model.Video{
 		VID:       primitive.NewObjectID(),
@@ -202,5 +212,7 @@ func UploadFile(c *gin.Context) {
 		"err":           "",
 		"tempVideoFile": videoBase64,
 		"videoID":       insertFlippedVideo.VID,
+		"videoTitle":    insertFlippedVideo.Title,
+		"videoData":     insertFlippedVideo.VideoData,
 	})
 }

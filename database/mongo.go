@@ -8,7 +8,7 @@ import (
 var QmgoConnection *qmgo.QmgoClient
 var err error
 
-func init() {
+func MongoDBinit() {
 	ctx := context.TODO()
 	QmgoConnection, err = qmgo.Open(ctx, &qmgo.Config{
 		Uri:      "mongodb://localhost:27017/",

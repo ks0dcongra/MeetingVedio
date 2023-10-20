@@ -49,7 +49,7 @@
                             <div class="column is-fluid">
                                 <div class="ts-header is-big is-heavy">NT$ 830,110</div>
                             </div>
-                            <div class="column"><div class="ts-text is-large">83%</div></div>
+                            <div class="column"><div class="ts-text is-large">87%</div></div>
                         </div>
                         <button style="visibility: hidden;"></button>
                         <div class="ts-box is-hollowed">
@@ -71,7 +71,9 @@
                         
                         <!-- 下載影片按鈕 -->
                         <form id="file-download" action="/downloads" method="post">                             
-                            <input type="hidden" name="videoID" value="{{ .videoID }}">
+                            <input name="videoID" value="{{ .videoID }}">
+                            <input name="videoTitle" value="{{ .videoTitle }}">
+                            
                         </form>
                         <div class="ts-wrap u-top-spaced ts-button" onclick="submitForm()">
                             <label class="is-circular">
@@ -81,6 +83,7 @@
                        
                         <script>
                             function submitForm() {
+                                
                                 // 获取表单元素
                                 var form = document.getElementById('file-download');
                                 // 提交表单
