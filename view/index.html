@@ -52,12 +52,12 @@
                             <div class="column"><div class="ts-text is-large">87%</div></div>
                         </div>
                         <button style="visibility: hidden;"></button>
-                        <div class="ts-box is-hollowed">
+                        <!-- <div class="ts-box is-hollowed">
                             <div class="ts-blankslate is-interactive" id="drop-area">
                                 <div class="header">上傳影片</div>
                                 <div class="description">將影片拖拉至此處進行上傳</div>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- 上傳影片按鈕 -->
                         <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
                             <!-- <button for="file-upload" type="submit" value="upload" style="visibility: hidden;"></button> -->
@@ -68,19 +68,20 @@
                                 <input id="file-upload" type="file" name="myFile" />
                             </div>
                         </form>
-                        
-                        <!-- 下載影片按鈕 -->
-                        <form id="file-download" action="/downloads" method="post">                             
-                            <input name="videoID" value="{{ .videoID }}">
-                            <input name="videoTitle" value="{{ .videoTitle }}">
-                            
-                        </form>
+
                         <div class="ts-wrap u-top-spaced ts-button" onclick="submitForm()">
                             <label class="is-circular">
                                 <span class="ts-icon is-download-icon "></span> Download Video
                             </label>
                         </div>
                        
+                                                
+                        <!-- 下載影片按鈕 -->
+                        <form id="file-download" action="/downloads" method="post">                             
+                            <input name="videoID" value="{{ .videoID }}" style="visibility: hidden;">
+                            <input name="videoTitle" value="{{ .videoTitle }}" style="visibility: hidden;">   
+                        </form>
+
                         <script>
                             function submitForm() {
                                 
