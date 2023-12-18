@@ -9,7 +9,7 @@ import (
 	"io"
 	"log"
 
-	"os/exec"
+	// "os/exec"
 
 	"net/http"
 	"os"
@@ -120,16 +120,17 @@ func UploadFile(c *gin.Context) {
 	// 	return
 	// }
 
+	// TODO:這裡暫時註解，加速測試
 	// 逆转复制的视频
-	reverseCmd := exec.Command("ffmpeg", "-i", "tempVideo.mp4", "-vf", "reverse", "-af", "areverse", "reversedVideo.mp4")
-	reverseCmd.Stdout = os.Stdout
-	reverseCmd.Stderr = os.Stderr
+	// reverseCmd := exec.Command("ffmpeg", "-i", "tempVideo.mp4", "-vf", "reverse", "-af", "areverse", "reversedVideo.mp4")
+	// reverseCmd.Stdout = os.Stdout
+	// reverseCmd.Stderr = os.Stderr
 
-	err = reverseCmd.Run()
-	if err != nil {
-		fmt.Println("Error reversing video:", err)
-		return
-	}
+	// err = reverseCmd.Run()
+	// if err != nil {
+	// 	fmt.Println("Error reversing video:", err)
+	// 	return
+	// }
 
 	// 串接视频
 	// finalCmd := exec.Command("ffmpeg", "-safe", "0", "-f", "concat", "copyVideo.mp4", "-c:v ", "copy", "-c:a ", "copy", "copyVideo2.mp4")
@@ -146,21 +147,21 @@ func UploadFile(c *gin.Context) {
 	// 	fmt.Println("Error concat video:", err)
 	// 	return
 	// }
-
 	// 删除临时文件
-	if err := os.Remove("tempVideo.mp4"); err != nil {
-		fmt.Println("deleting tempVideo fail", err)
-	}
+	// if err := os.Remove("tempVideo.mp4"); err != nil {
+	// 	fmt.Println("deleting tempVideo fail", err)
+	// }
 
-	data2, err := os.ReadFile("./reversedVideo.mp4")
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Error Reading the File")
-		return
-	}
+	// TODO:這裡暫時註解，加速測試
+	// data2, err := os.ReadFile("./reversedVideo.mp4")
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, "Error Reading the File")
+	// 	return
+	// }
 
-	if err := os.Remove("reversedVideo.mp4"); err != nil {
-		fmt.Println("deleting reversedVideo fail:", err)
-	}
+	// if err := os.Remove("reversedVideo.mp4"); err != nil {
+	// 	fmt.Println("deleting reversedVideo fail:", err)
+	// }
 
 	// MongoDB operation
 	file.Seek(0, 0) // Reset the file pointer to the beginning of the file
@@ -177,6 +178,16 @@ func UploadFile(c *gin.Context) {
 	// if err := os.Remove("flippedVideo.mp4"); err != nil {
 	// 	fmt.Println("deleting flippedVideo fail", err)
 	// }
+
+	// FIXME:臨時加的
+	data2, err := os.ReadFile("./tempVideo.mp4")
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, "Error Reading the File")
+		return
+	}
+	if err := os.Remove("tempVideo.mp4"); err != nil {
+		fmt.Println("deleting tempVideo fail", err)
+	}
 
 	insertFlippedVideo := model.Video{
 		VID:       primitive.NewObjectID(),
