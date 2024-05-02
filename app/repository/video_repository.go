@@ -1,28 +1,46 @@
 package repository
 
-// import (
-// 	"time"
+import (
+	"MeetingVideoHelper/app/model"
+	"MeetingVideoHelper/database"
+	"context"
+	"time"
 
-// 	"gorm.io/gorm"
-// )
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
-type UserRepositoryInterface interface {
-}
-type UserRepository struct {
-}
-
-func NewUserRepository() *UserRepository {
-	return &UserRepository{}
+type VideoRepository struct {
 }
 
-// Create User
-// func (h *UserRepository) Create(data *model.Student) (id int, result *gorm.DB) {
-// 	student := model.Student{
-// 		Name:           data.Name,
-// 		Password:       data.Password,
-// 		Student_number: data.Student_number,
-// 		CreatedTime:    time.Now(),
-// 		UpdatedTime:    time.Now()}
-// 	result = database.DB.Create(&student)
-// 	return student.Id, result
-// }
+func NewVideoRepository() *VideoRepository {
+	return &VideoRepository{}
+}
+
+func (vr *VideoRepository) GetVideoData(videoID primitive.ObjectID) ([]byte, error) {
+	var videoResult model.Video
+
+	err := database.QmgoConnection.Find(context.Background(), bson.M{"vid": videoID}).One(&videoResult)
+	if err != nil {
+		return nil, err
+	}
+
+	return videoResult.VideoData, nil
+}
+
+func (vr *VideoRepository) SaveVideo(concatVideoBytes []byte) (*model.Video, error) {
+	// save to mongodb
+	insertVideo := model.Video{
+		VID:       primitive.NewObjectID(),
+		Title:     "concatVideo",
+		VideoData: concatVideoBytes,
+		UpdatedAt: time.Now(),
+	}
+
+	_, err := database.QmgoConnection.InsertOne(context.Background(), insertVideo)
+	if err != nil {
+		return nil, err
+	}
+
+	return &insertVideo, nil
+}

@@ -6,3 +6,13 @@ input[type="file"] {
 .custom-file-upload {
     cursor: pointer;
 }
+
+.cursor {
+    cursor: pointer;
+}
+
+.h2 {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+}

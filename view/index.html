@@ -11,9 +11,9 @@
     <div class="ts-content is-tertiary is-fitted">
         <div class="ts-container">
             <div class="ts-tab is-relaxed">
-                <a href="#!" class="item is-active">Home page</a>
-                <a href="#!" class="item">Contact me</a>
-                <a href="#!" class="item">Tutorial</a>
+                <a href="/index" class="item is-active">Home</a>
+                <!-- <a href="#!" class="item">Contact me</a>
+                <a href="#!" class="item">Tutorial</a> -->
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
                 
                 <div class="column is-5-wide">
                     <div class="ts-segment is-padded is-secondary">
-                        <div class="ts-progress">
+                        <!-- <div class="ts-progress">
                             <div class="bar" style="width: 20%"></div>
                         </div>
                         <div class="ts-grid u-top-spaced">
@@ -50,17 +50,19 @@
                                 <div class="ts-header is-big is-heavy">NT$ 830,110</div>
                             </div>
                             <div class="column"><div class="ts-text is-large">87%</div></div>
-                        </div>
-                        <button style="visibility: hidden;"></button>
+                        </div> -->
+                
                         <!-- <div class="ts-box is-hollowed">
                             <div class="ts-blankslate is-interactive" id="drop-area">
                                 <div class="header">上傳影片</div>
                                 <div class="description">將影片拖拉至此處進行上傳</div>
                             </div>
                         </div> -->
+                        <div class="ts-header is-huge is-heavy">上傳 Upload</div>
                         <!-- 上傳影片按鈕 -->
                         <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
                             <!-- <button for="file-upload" type="submit" value="upload" style="visibility: hidden;"></button> -->
+                            
                             <div class="ts-wrap u-top-spaced ts-button">
                                 <label for="file-upload" class="custom-file-upload is-circular">
                                     <span class="ts-icon is-video-icon "></span> Upload Video
@@ -68,14 +70,23 @@
                                 <input id="file-upload" type="file" name="myFile" />
                             </div>
                         </form>
-
-                        <div class="ts-wrap u-top-spaced ts-button" onclick="submitForm()">
-                            <label class="is-circular">
-                                <span class="ts-icon is-download-icon "></span> Download Video
+                        <br />
+                        <div class="ts-header is-huge is-heavy">下載 Download</div>
+                        
+                        <div class="ts-wrap u-top-spaced ts-button cursor" onclick="submitForm()">
+                            <label class="is-circular cursor">
+                                <span class="ts-icon is-download-icon cursor"></span> <span class="cursor">Download Video</span>
                             </label>
                         </div>
-                       
-                                                
+                        <br\>
+                        <br\>
+                        <div class="ts-wrap u-top-spaced" onclick="submitForm()">
+                            <div class="ts-header is-huge is-heavy">教學影片 Tutorial</div>
+                            <video width="300" height="300" controls>
+                                <source src="path/to/video.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>              
                         <!-- 下載影片按鈕 -->
                         <form id="file-download" action="/downloads" method="post">                             
                             <input name="videoID" value="{{ .videoID }}" style="visibility: hidden;">
@@ -84,32 +95,29 @@
 
                         <script>
                             function submitForm() {
-                                
-                                // 获取表单元素
                                 var form = document.getElementById('file-download');
-                                // 提交表单
                                 form.submit();
                             }
                         </script>
-                        <div class="ts-text is-description is-center-aligned u-top-spaced-small">Andy Is Handsome</div>
+                        <!-- <div class="ts-text is-description is-center-aligned u-top-spaced-small">Andy Is Handsome</div> -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
      <!-- 下半部 -->
-    <div class="ts-container u-vertically-padded-big">
+    <div class="ts-container">
         <div class="ts-grid is-relaxed">
-            <div class="column is-3-wide">
-                <div class="ts-menu is-separated">
+            <div class="column is-1-wide">
+                <!-- <div class="ts-menu is-separated">
                     <a href="#!" class="item">簡介</a>
                     <a href="#!" class="item">關於我們</a>
                     <a href="#!" class="item">為何贊助</a>
                     <a href="#!" class="item">相關連結</a>
-                </div>
+                </div> -->
             </div>
-            <div class="column is-13-wide">
-                <p>Code Liquid is a 3D RPG Hentai Game that combines Sci-Fi and Fantasy elements.</p>
+            <div class="column is-15-wide">
+                <!-- <p>Code Liquid is a 3D RPG Hentai Game that combines Sci-Fi and Fantasy elements.</p>
                 <p>
                     At the time of the village's destruction, the player will take on the role of a hero who will save it from the crisis. In addition to the most basic way to
                     make money like completing the quests or killing monsters to get level up, you can also summon slaves from different worlds to help you to make money as the
@@ -153,31 +161,29 @@
 
                 <strong>▌ Dev Blog / 開發日誌：</strong><br />
                 <a href="https://dev.code-liquid.io/">https://dev.code-liquid.io/</a><br />
-
-               
+                -->
                 <div class="ts-meta is-secondary is-center-aligned u-top-spaced">
                     <a href="#!" class="item">使用者條約</a>
                     <a href="#!" class="item">隱私政策</a>
                     <a href="#!" class="item">聯繫我們</a>
                 </div>
                 <footer class="ts-text is-center-aligned is-description u-top-spaced">
-                    <p>&copy; 2023 MeetingVedioHelper. All rights reserved.</p>
+                    <p>&copy; 2024 MeetingVedioHelper. All rights reserved.</p>
                 </footer>
             </div>
+        </div>
+    </div>
 </body>
 </html>
 <script src="/static/dist/tocas.min.js"></script>
 <!--在Go模板中使用Go的模板引擎輸出err變數的值，並使用alert()顯示錯誤消息-->
 <script>
-    var successMsg = "{{ .successMsg }}";
-    var err = "{{ .err }}";
-
-    if (successMsg !== "") {
-        alert(successMsg);
-    }
-    if (err !== "") {
-        alert(err);
-    }
+    var status = "{{ .status }}";
+    var msg = "{{ .msg }}";
+    // alert(msg);
+    if (status !== "") {
+        alert(msg);
+    } 
  </script>
 <script>
     const form = document.getElementById('upload-form');
