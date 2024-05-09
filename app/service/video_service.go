@@ -3,7 +3,9 @@ package service
 import (
 	"MeetingVideoHelper/app/model"
 	"MeetingVideoHelper/app/repository"
+	"crypto/rand"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 
@@ -77,7 +79,7 @@ func (vs *VideoService) UploadedVideo(fileBytes []byte) (*model.Video, error) {
 	return insertVideo, nil
 }
 
-func createTempFile(fileBytes []byte) (string, error) { 
+func createTempFile(fileBytes []byte) (string, error) {
 	tempVideo, err := os.CreateTemp("./static/videos", "tempVideo*.mp4")
 	if err != nil {
 		fmt.Println("Error creating temporary file:", err)
@@ -86,38 +88,53 @@ func createTempFile(fileBytes []byte) (string, error) {
 	defer tempVideo.Close()
 
 	tempVideo.Write(fileBytes)
-	
+
 	return tempVideo.Name(), nil
 }
 
 func reverseVideo(tempVideoName string) (string, error) {
-	tempVideoNameMp4 := tempVideoName 
-	reversedVideoPath := "./reversedVideo.mp4"
-	 // reverse vedio
-	reverseCmd := exec.Command("ffmpeg", "-i", tempVideoNameMp4, "-vf", "reverse", "-af", "areverse", reversedVideoPath)
+	tempVideoNameMp4 := tempVideoName
+
+	// 生成隨機檔案名稱
+	randomBytes := make([]byte, 8)
+	_, err := io.ReadFull(rand.Reader, randomBytes)
+	if err != nil {
+		return "", err
+	}
+	randomFilePath := fmt.Sprintf("./%x.mp4", randomBytes)
+
+	// reverse vedio
+	reverseCmd := exec.Command("ffmpeg", "-i", tempVideoNameMp4, "-vf", "reverse", "-af", "areverse", randomFilePath)
 	reverseCmd.Stdout = os.Stdout
 	reverseCmd.Stderr = os.Stderr
 
-	err := reverseCmd.Run()
+	err = reverseCmd.Run()
 	if err != nil {
 		fmt.Println("Error reversing video:", err)
 		return "", err
 	}
-	return reversedVideoPath, nil
+	return randomFilePath, nil
 }
 
-func concatVideos(video1Path, video2Path string) (string, error) { 
-	concatVideoPath := "./flippedVideo.mp4"
+func concatVideos(video1Path, video2Path string) (string, error) {
+	// 生成隨機檔案名稱
+	randomBytes := make([]byte, 8)
+	_, err := io.ReadFull(rand.Reader, randomBytes)
+	if err != nil {
+		return "", err
+	}
+	randomFilePath := fmt.Sprintf("./%x.mp4", randomBytes)
+
 	// ffmpeg -i 要被串接的影音檔案路徑1 -i 要被串接的影音檔案路徑2 -i 要被串接的影音檔案路徑3 -filter_complex "[0:v][0:a][1:v][1:a][2:v][2:a]concat=n=3:v=1:a=1[outv][outa]" -map "[outv]" -map "[outa]" 輸出的影片檔案路徑
-	finalCmd := exec.Command("ffmpeg", "-i", video1Path, "-i", video2Path, "-filter_complex", "[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1[outv][outa]", "-map", "[outv]", "-map", "[outa]", "-n", concatVideoPath)
+	finalCmd := exec.Command("ffmpeg", "-i", video1Path, "-i", video2Path, "-filter_complex", "[0:v][0:a][1:v][1:a]concat=n=2:v=1:a=1[outv][outa]", "-map", "[outv]", "-map", "[outa]", "-n", randomFilePath)
 	finalCmd.Stdout = os.Stdout
 	finalCmd.Stderr = os.Stderr
 
-	err := finalCmd.Run()
+	err = finalCmd.Run()
 	if err != nil {
 		fmt.Println("Error concat video:", err)
 		return "", err
 	}
 
-	return concatVideoPath, nil
+	return randomFilePath, nil
 }
