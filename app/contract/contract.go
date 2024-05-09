@@ -7,7 +7,7 @@ const (
 )
 
 var Message = map[int]string{
-	Success:            "Upload video successfully",
-	ERROR_Upload_Video: "Upload video fail",
-	ERROR_Download_Video:"Download video fail",
+	Success:              "Upload video successfully",
+	ERROR_Upload_Video:   "Upload video fail",
+	ERROR_Download_Video: "Download video fail",
 }

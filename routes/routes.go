@@ -25,7 +25,7 @@ func ApiRoutes(router *gin.Engine) {
 	router.GET("/index", func(c *gin.Context) {
 		c.HTML(200, "index.html", map[string]string{"title": "home"})
 	})
-	
+
 	// download file
 	router.GET("/download/:filename", func(c *gin.Context) {
 		// 取得路由參數中的檔案名稱
