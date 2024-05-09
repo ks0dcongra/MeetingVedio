@@ -2,8 +2,8 @@ version: '3'
 services:
   app:
     image : meeting-video-helper
-    container_name: meeting-video-helper
     build: .
+    container_name: meeting-video-helper
     ports: 
       - 9528:8080 
     depends_on:
@@ -17,19 +17,15 @@ services:
     ports:
       - '27018:27017'
     command: ["--auth", "--bind_ip_all"]
+    volumes:
+      - mongodb-volume:/var/lib/mysql:/app/database/data
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
-      MONGO_USERNAME: user1
-      MONGO_PASSWORD: user1
-      MONGO_INITDB_DATABASE: mydb
-    volumes:
-      # - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ./database/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
-      - ./database/configdb:/app/database/configdb
-      - ./database/data:/app/database/data
     restart: always
     networks:
       - server
+volumes:
+  mongodb-volume:
 networks:
   server:
