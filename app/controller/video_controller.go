@@ -103,7 +103,6 @@ func (vc *VideoController) UploadVideo(c *gin.Context) {
 		"msg":           contract.Message[contract.Success],
 		"tempVideoFile": videoDataBase64,
 		"videoID":       insertVideo.VID,
-		"videoTitle":    insertVideo.Title,
 		"videoData":     insertVideo.VideoData,
 	})
 }

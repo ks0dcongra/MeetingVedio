@@ -32,7 +32,6 @@ func (vr *VideoRepository) SaveVideo(concatVideoBytes []byte) (*model.Video, err
 	// save to mongodb
 	insertVideo := model.Video{
 		VID:       primitive.NewObjectID(),
-		Title:     "concatVideo",
 		VideoData: concatVideoBytes,
 		UpdatedAt: time.Now(),
 	}
