@@ -2,7 +2,7 @@ FROM golang:1.20.6-alpine3.18 as builder
 
 LABEL maintainer="Shehomebow"
 
-RUN apk update && apk add --no-cache git
+RUN apk update && apk add --no-cache git ffmpeg
 # -p選項告訴 mkdir 創建任何不存在的中間目錄
 RUN mkdir -p /app
 
