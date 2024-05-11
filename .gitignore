@@ -1,2 +1,4 @@
 # VSCode Extension
 settings.json
+*.pem
+docker-compose-deploy-ec2.yaml
