@@ -11,7 +11,7 @@ func ApiRoutes(router *gin.Engine) {
 	router.LoadHTMLGlob("view/*")
 
 	// rander index.html
-	router.GET("/index", func(c *gin.Context) {
+	router.GET("/", func(c *gin.Context) {
 		c.HTML(200, "index.html", map[string]string{"title": "home"})
 	})
 
