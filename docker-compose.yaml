@@ -5,10 +5,10 @@ services:
     build: .
     container_name: meeting-video-helper
     ports: 
-      - 9528:8080 
+      - 9528:9528
     depends_on:
       - db
-    restart: always
+    restart: on-failure
     networks:
       - server
   db:
@@ -18,11 +18,11 @@ services:
       - '27018:27017'
     command: ["--auth", "--bind_ip_all"]
     volumes:
-      - mongodb-volume:/var/lib/mysql:/app/database/data
+      - mongodb-volume:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
-    restart: always
+    restart: on-failure
     networks:
       - server
 volumes:

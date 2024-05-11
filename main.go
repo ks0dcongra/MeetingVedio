@@ -31,7 +31,7 @@ func main() {
 	// 連接Router
 	routes.ApiRoutes(mainServer)
 
-	if err := mainServer.Run(":8080"); err != nil {
+	if err := mainServer.Run(":9528"); err != nil {
 		log.Fatal("HTTP service failed: ", err)
 	}
 }
