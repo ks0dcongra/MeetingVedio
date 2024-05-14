@@ -1,0 +1,64 @@
+services:
+  app:
+    image : ks0dcongra/docker_test:1.0
+    build: .
+    container_name: meeting-video-helper
+    depends_on:
+      - db
+    restart: on-failure
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app-http.entrypoints=web"
+      - "traefik.http.routers.app-https.entrypoints=websecure"
+      - "traefik.http.routers.app-http.rule=Host(`shehome.online`)"
+      - "traefik.http.routers.app-https.rule=Host(`shehome.online`)"
+      - "traefik.http.routers.app-https.tls=true"
+      - "traefik.http.routers.app-https.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.https-only.redirectscheme.scheme=https"
+      - "traefik.http.routers.app-http.middlewares=https-only"
+      - "traefik.http.routers.app-https.service=app"
+      - "traefik.http.services.app.loadbalancer.server.port=9528"
+    networks:
+      - develop
+  db:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '27018:27017'
+    command: ["--auth", "--bind_ip_all"]
+    volumes:
+      - mongodb-volume:/data/db:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    restart: on-failure
+    networks:
+      - develop
+  traefik:
+    image: traefik:v2.10
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencrypt.acme.email=shehomebow@gmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - develop
+volumes:
+  mongodb-volume:
+networks:
+  develop:
+    external: true
