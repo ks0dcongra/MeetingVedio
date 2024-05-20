@@ -79,7 +79,10 @@ func (vc *VideoController) UploadVideo(c *gin.Context) {
 	// convert to bytes
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Error Reading the File")
+		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+			"status": contract.ERROR_Upload_Video,
+			"msg":    contract.Message[contract.ERROR_Upload_Video],
+		})
 		return
 	}
 
