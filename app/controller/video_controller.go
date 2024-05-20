@@ -4,6 +4,7 @@ import (
 	"MeetingVideoHelper/app/contract"
 	"MeetingVideoHelper/app/service"
 	"encoding/base64"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -27,8 +28,8 @@ func (vc *VideoController) DownloadVideo(c *gin.Context) {
 
 	if videoID == "" {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
-			"status": contract.ERROR_Download_Video,
-			"msg":    contract.Message[contract.ERROR_Download_Video],
+			"status": contract.ERROR_Download_Video_NotExist,
+			"msg":    fmt.Sprintf("%s: %s", contract.Message[contract.ERROR_Download_Video], contract.Message[contract.ERROR_Download_Video_NotExist]),
 		})
 		return
 	}
@@ -36,8 +37,8 @@ func (vc *VideoController) DownloadVideo(c *gin.Context) {
 	videoDownload, err := primitive.ObjectIDFromHex(videoID[10:34])
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
-			"status": contract.ERROR_Download_Video,
-			"msg":    contract.Message[contract.ERROR_Download_Video],
+			"status": contract.ERROR_Video_To_Hex,
+			"msg":    fmt.Sprintf("%s: %s", contract.Message[contract.ERROR_Download_Video], contract.Message[contract.ERROR_Video_To_Hex]),
 		})
 		return
 	}
@@ -46,7 +47,7 @@ func (vc *VideoController) DownloadVideo(c *gin.Context) {
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
 			"status": contract.ERROR_Download_Video,
-			"msg":    contract.Message[contract.ERROR_Download_Video],
+			"msg":    fmt.Sprintf("%s: %s", contract.Message[contract.ERROR_Download_Video], err.Error()),
 		})
 		return
 	}
@@ -68,8 +69,8 @@ func (vc *VideoController) UploadVideo(c *gin.Context) {
 	file, _, err := c.Request.FormFile("myFile")
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
-			"status": contract.ERROR_Upload_Video,
-			"msg":    contract.Message[contract.ERROR_Upload_Video],
+			"status": contract.ERROR_Upload_Video_NotExist,
+			"msg":    fmt.Sprintf("%s: %s", contract.Message[contract.ERROR_Upload_Video], contract.Message[contract.ERROR_Upload_Video_NotExist]),
 		})
 		return
 	}
@@ -80,8 +81,8 @@ func (vc *VideoController) UploadVideo(c *gin.Context) {
 	fileBytes, err := io.ReadAll(file)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
-			"status": contract.ERROR_Upload_Video,
-			"msg":    contract.Message[contract.ERROR_Upload_Video],
+			"status": contract.ERROR_Video_Format,
+			"msg":    fmt.Sprintf("%s: %s", contract.Message[contract.ERROR_Upload_Video], contract.Message[contract.ERROR_Video_Format]),
 		})
 		return
 	}
@@ -91,7 +92,11 @@ func (vc *VideoController) UploadVideo(c *gin.Context) {
 	// Call the service layer to handle file upload and video processing
 	insertVideo, err := vc.videoService.UploadedVideo(fileBytes)
 	if err != nil {
-		// handle error
+		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
+			"status": contract.ERROR_Download_Video,
+			"msg":    fmt.Sprintf("%s: %s", contract.Message[contract.ERROR_Upload_Video], err.Error()),
+		})
+
 		return
 	}
 
