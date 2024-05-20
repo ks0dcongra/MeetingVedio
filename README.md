@@ -2,12 +2,16 @@
 
 The system can help you to make a fake meeting video that can't easy to recognize that is a fake meeting video
 
+## Principle
+
+When you upload a video to the system, she will copy the original clips, reverse the video, and then concatenate it to the back of the video.
+
 ## Table of contents
 
-- Requirements
-- Installation
-- FAQ
-- Demo
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [FAQ](#faq)
+- [Demo](#demo)
 
 ## Requirements
 
