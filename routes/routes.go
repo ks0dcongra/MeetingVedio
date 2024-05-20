@@ -2,6 +2,8 @@ package routes
 
 import (
 	"MeetingVideoHelper/app/controller"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +14,7 @@ func ApiRoutes(router *gin.Engine) {
 
 	// rander index.html
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(200, "index.html", map[string]string{"title": "home"})
+		c.HTML(http.StatusOK, "index.html", map[string]string{"title": "home"})
 	})
 
 	// download file
@@ -32,5 +34,5 @@ func ApiRoutes(router *gin.Engine) {
 	router.POST("/downloads", controller.NewVideoController().DownloadVideo)
 
 	// upload file
-	router.POST("/upload", controller.NewVideoController().UploadVideo)
+	router.POST("/upload",controller.NewVideoController().UploadVideo)
 }
