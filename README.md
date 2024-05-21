@@ -4,7 +4,7 @@ The system can help you to make a fake meeting video that can't easy to recogniz
 
 ## Principle
 
-When you upload a video to the system, she will copy the original clips, reverse the video, and then concatenate it to the back of the video.
+When you upload a video to the system, the system will copy the original clips, reverse the video, and then concatenate it to the back of the video.
 
 ## Table of contents
 
