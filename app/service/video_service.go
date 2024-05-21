@@ -6,6 +6,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 
@@ -25,17 +26,20 @@ func NewVideoService() *VideoService {
 func (vs *VideoService) GetVideoFile(videoID primitive.ObjectID) (string, error) {
 	videoData, err := vs.videoRepository.GetVideoData(videoID)
 	if err != nil {
+		log.Println("get video fail:", err)
 		return "", err
 	}
 
 	tempFile, err := os.CreateTemp("./", "tempVideo*.mp4")
 	if err != nil {
+		log.Println("create file fail:", err)
 		return "", err
 	}
 	defer tempFile.Close()
 
 	_, err = tempFile.Write(videoData)
 	if err != nil {
+		log.Println("write file fail:", err)
 		return "", err
 	}
 
@@ -46,6 +50,7 @@ func (vs *VideoService) UploadedVideo(fileBytes []byte) (*model.Video, error) {
 	// write uploaded files to temporary files
 	tempVideoPath, err := createTempFile(fileBytes)
 	if err != nil {
+		log.Println("create temporary file fail:", err)
 		return nil, err
 	}
 	defer os.Remove(tempVideoPath)
@@ -53,6 +58,7 @@ func (vs *VideoService) UploadedVideo(fileBytes []byte) (*model.Video, error) {
 	// reverse video
 	reversedVideoPath, err := reverseVideo(tempVideoPath)
 	if err != nil {
+		log.Println("reverse video fail:", err)
 		return nil, err
 	}
 	defer os.Remove(reversedVideoPath)
@@ -60,6 +66,7 @@ func (vs *VideoService) UploadedVideo(fileBytes []byte) (*model.Video, error) {
 	// merge original video and reverse it
 	concatVideoPath, err := concatVideos(tempVideoPath, reversedVideoPath)
 	if err != nil {
+		log.Println("concat video fail:", err)
 		return nil, err
 	}
 	defer os.Remove(concatVideoPath)
@@ -67,12 +74,14 @@ func (vs *VideoService) UploadedVideo(fileBytes []byte) (*model.Video, error) {
 	// read file data
 	concatVideoBytes, err := os.ReadFile(concatVideoPath)
 	if err != nil {
+		log.Println("read file fail:", err)
 		return nil, err
 	}
 
 	// save data to database
 	insertVideo, err := vs.videoRepository.SaveVideo(concatVideoBytes)
 	if err != nil {
+		log.Println("insert video fail", err)
 		return nil, err
 	}
 
@@ -82,7 +91,6 @@ func (vs *VideoService) UploadedVideo(fileBytes []byte) (*model.Video, error) {
 func createTempFile(fileBytes []byte) (string, error) {
 	tempVideo, err := os.CreateTemp("./static/videos", "tempVideo*.mp4")
 	if err != nil {
-		fmt.Println("Error creating temporary file:", err)
 		return "", err
 	}
 	defer tempVideo.Close()
@@ -103,14 +111,13 @@ func reverseVideo(tempVideoName string) (string, error) {
 	}
 	randomFilePath := fmt.Sprintf("./%x.mp4", randomBytes)
 
-	// reverse vedio
+	// reverse video
 	reverseCmd := exec.Command("ffmpeg", "-i", tempVideoNameMp4, "-vf", "reverse", "-af", "areverse", randomFilePath)
 	reverseCmd.Stdout = os.Stdout
 	reverseCmd.Stderr = os.Stderr
 
 	err = reverseCmd.Run()
 	if err != nil {
-		fmt.Println("Error reversing video:", err)
 		return "", err
 	}
 	return randomFilePath, nil
@@ -132,7 +139,6 @@ func concatVideos(video1Path, video2Path string) (string, error) {
 
 	err = finalCmd.Run()
 	if err != nil {
-		fmt.Println("Error concat video:", err)
 		return "", err
 	}
 
