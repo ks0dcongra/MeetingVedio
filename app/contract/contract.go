@@ -8,6 +8,7 @@ const (
 	ERROR_Video_To_Hex
 	ERROR_Upload_Video_NotExist
 	ERROR_Video_Format
+	ERROR_IP_Request_Limit
 )
 
 var Message = map[int]string{
@@ -18,4 +19,5 @@ var Message = map[int]string{
 	ERROR_Video_To_Hex:            "Video bytes to hex fail.",
 	ERROR_Upload_Video_NotExist:   "Video not found.",
 	ERROR_Video_Format:            "Video format has some problem.",
+	ERROR_IP_Request_Limit:        "IP request reaches the limit",
 }
