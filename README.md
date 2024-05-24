@@ -2,22 +2,22 @@
 
 This system can help you to create fake meeting videos that are difficult to identify
 
+## Table of contents
+- [Principle](#principle)
+- [Requirements](#requirements)
+- [Getting Started](#getting-started)
+- [FAQ](#faq)
+- [Demo](#demo)
+
 ## Principle
 
 When you upload a video to the system, the system will copy the original clips, reverse the previously copied video, and then concatenate it to the back of the video
-
-## Table of contents
-
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [FAQ](#faq)
-- [Demo](#demo)
 
 ## Requirements
 
 * Ensure you already have downloaded Docker 
 
-## Installation
+## Getting Started
 
 1. Get remote repository
 ```
