@@ -1,6 +1,6 @@
 # Introduction
 
-This system can help you to create fake meeting videos that are difficult to identify
+This system can help you create fake meeting videos that are difficult to identify
 
 ## Table of contents
 - [Principle](#principle)
