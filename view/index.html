@@ -23,14 +23,16 @@
             <div class="ts-header is-huge is-heavy">MeetingVedioHelper</div>
             <div class="ts-text is-secondary">
                 <p>
-                    幫助您創建不易識別的虛假會議影片
+                    此系統可以幫助您創建難以識別的假會議影片
                     </br>
-                    To help you create fake meeting videos that are difficult to identify
+                    This system can help you to create fake meeting videos that are difficult to identify
                 </p>
             </div>
             <div class="ts-grid is-relaxed is-stretched u-top-spaced">
                 <div class="column is-9-wide">
+                    <img src="https://images.vocus.cc/6527954d-241e-44f4-9809-d5461df3ce7c.gif" alt="Computer man" style="width:48px;height:48px;">
                     <video width="100%" height="100%" id="{{ .videoID }}" controls>
+                        
                         <!-- MongoDB use-->
                         <source src="data:video/mp4;base64,{{ .tempVideoFile }}" type="video/mp4">
                         <!-- General use-->
@@ -73,23 +75,42 @@
                         <br />
                         <div class="ts-header is-heavy is-center-aligned">下載 Download</div>
                         
-                        <div class="ts-wrap u-top-spaced is-short ts-button" onclick="submitForm()">
+                        <div class="ts-wrap u-top-spaced is-short ts-button" onclick="submitVideoForm()">
                             <label class="is-circular">
-                                <span class="ts-icon is-download-icon"></span> <span class="cursor">Download</span>
+                                <span class="ts-icon is-download-icon"></span> <span class="cursor">Download Video</span>
                             </label>
                         </div>
                   
+                        <br />
+                        <div class="ts-header is-heavy is-center-aligned">下載GIF DownloadGIF</div>
+                        
+                        <div class="ts-wrap u-top-spaced is-short ts-button" onclick="submitGIFForm()">
+                            <label class="is-circular">
+                                <span class="ts-icon is-download-icon"></span> <span class="cursor">Download GIF</span>
+                            </label>
+                        </div>
                                  
                         <!-- 下載影片按鈕 -->
                         <form id="file-download" action="/download" method="post">                             
                             <input name="videoID" value="{{ .videoID }}" style="visibility: hidden;">
                         </form>
 
+                        <form id="file-download-GIF" action="/download" method="post">    
+                            <input name="GIF" value="GIF" style="visibility: hidden;">                      
+                            <input name="videoID" value="{{ .videoID }}" style="visibility: hidden;">
+                        </form>
+
                         <script>
-                            function submitForm() {
+                            function submitVideoForm() {
                                 var form = document.getElementById('file-download');
                                 form.submit();
                             }
+
+                            function submitGIFForm() {
+                                var form = document.getElementById('file-download-GIF');
+                                form.submit();
+                            }
+
                         </script>
                         <!-- <div class="ts-text is-description is-center-aligned u-top-spaced-small">Andy Is Handsome</div> -->
                     </div>
@@ -108,7 +129,6 @@
                     <source src="path/to/video.mp4" type="video/mp4">
                 </video>
             </div>
-         
         </div>    
         <!-- <div class="ts-grid is-relaxed">
             <div class="column is-6-wide">
@@ -127,6 +147,12 @@
                 </div>
             </div>
         </div>  -->
+        <div class="u-top-spaced">
+            <div class="ts-header is-heavy is-center-aligned">My Github URL</div>
+        </div>   
+        <div class="ts-text is-center-aligned u-top-spaced"> 
+            <a href="https://github.com/ks0dcongra/MeetingVideoHelper">My github repo</a>
+        </div>
         <footer class="ts-text is-center-aligned is-description u-top-spaced">
             <p>&copy; 2024 MeetingVedioHelper. All rights reserved.</p>
         </footer>

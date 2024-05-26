@@ -24,6 +24,7 @@ func NewVideoController() *VideoController {
 
 func (vc *VideoController) DownloadVideo(c *gin.Context) {
 	videoID := c.PostForm("videoID")
+	GIFTag := c.PostForm("GIF")
 
 	if videoID == "" {
 		c.HTML(http.StatusBadRequest, "index.html", gin.H{
@@ -33,7 +34,7 @@ func (vc *VideoController) DownloadVideo(c *gin.Context) {
 		return
 	}
 
-	videoDownload, err := primitive.ObjectIDFromHex(videoID[10:34])
+	videoDownloadID, err := primitive.ObjectIDFromHex(videoID[10:34])
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
 			"status": contract.ERROR_Video_To_Hex,
@@ -42,7 +43,7 @@ func (vc *VideoController) DownloadVideo(c *gin.Context) {
 		return
 	}
 
-	filePath, err := vc.videoService.GetVideoFile(videoDownload)
+	filePath, err := vc.videoService.GetVideoFile(videoDownloadID, GIFTag)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
 			"status": contract.ERROR_Download_Video,
@@ -51,6 +52,7 @@ func (vc *VideoController) DownloadVideo(c *gin.Context) {
 		return
 	}
 	defer os.Remove(filePath)
+
 	filePath = filePath[2:]
 	c.Header("Content-Disposition", "attachment; filename="+filePath)
 	c.Header("Content-Type", "video/mp4")

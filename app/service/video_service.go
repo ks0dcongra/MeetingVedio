@@ -23,7 +23,7 @@ func NewVideoService() *VideoService {
 	}
 }
 
-func (vs *VideoService) GetVideoFile(videoID primitive.ObjectID) (string, error) {
+func (vs *VideoService) GetVideoFile(videoID primitive.ObjectID, GIFTag string) (string, error) {
 	videoData, err := vs.videoRepository.GetVideoData(videoID)
 	if err != nil {
 		log.Println("get video fail:", err)
@@ -41,6 +41,18 @@ func (vs *VideoService) GetVideoFile(videoID primitive.ObjectID) (string, error)
 	if err != nil {
 		log.Println("write file fail:", err)
 		return "", err
+	}
+	
+	if GIFTag != "" {
+		randomFilePath, err := convertGIF(tempFile.Name())
+		if err != nil {
+			log.Println("covert file to GIF fail:", err)
+			return "", err
+		}
+		tempFile.Close()
+		os.Remove(tempFile.Name())
+	
+		return randomFilePath, nil
 	}
 
 	return tempFile.Name(), nil
@@ -124,7 +136,7 @@ func reverseVideo(tempVideoName string) (string, error) {
 }
 
 func concatVideos(video1Path, video2Path string) (string, error) {
-	// 生成隨機檔案名稱
+	// generate random file name
 	randomBytes := make([]byte, 8)
 	_, err := io.ReadFull(rand.Reader, randomBytes)
 	if err != nil {
@@ -142,5 +154,28 @@ func concatVideos(video1Path, video2Path string) (string, error) {
 		return "", err
 	}
 
+	return randomFilePath, nil
+}
+
+func convertGIF(tempFileName string) (string, error) {
+	tempFileNameGIF := tempFileName
+
+	// generate random file name
+	randomBytes := make([]byte, 8)
+	_, err := io.ReadFull(rand.Reader, randomBytes)
+	if err != nil {
+		return "", err
+	}
+	randomFilePath := fmt.Sprintf("./tempGIF%x.gif", randomBytes)
+
+	// reverse video
+	reverseCmd := exec.Command("ffmpeg", "-i", tempFileNameGIF, "-vf", "fps=10,scale=320:-1:flags=lanczos", "-c:v", "gif", "-n", randomFilePath)
+	reverseCmd.Stdout = os.Stdout
+	reverseCmd.Stderr = os.Stderr
+
+	err = reverseCmd.Run()
+	if err != nil {
+		return "", err
+	}
 	return randomFilePath, nil
 }
