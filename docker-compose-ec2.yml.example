@@ -34,6 +34,21 @@ services:
     restart: on-failure
     networks:
       - develop
+  redis:
+    container_name: "redis"
+    image: redis:alpine
+    # Specify the redis.conf file to use and add a password.
+    command: redis-server /usr/local/etc/redis/redis.conf
+    # 如果要透過yaml對Redis設置密碼
+    # command: redis-server /usr/local/etc/redis/redis.conf --requirepass mypassword
+    ports: 
+      - "6379:6379"
+    restart: on-failure
+    # map the volumes to that redis has the custom conf file from this project.
+    volumes: 
+      - /redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - develop
   traefik:
     image: traefik:v2.10
     # Enables the web UI and tells Traefik to listen to docker
