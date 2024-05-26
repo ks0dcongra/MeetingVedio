@@ -106,10 +106,9 @@ func (vc *VideoController) UploadVideo(c *gin.Context) {
 
 	// uploaded file successfully
 	c.HTML(http.StatusOK, "index.html", gin.H{
-		"status":        contract.Success,
-		"msg":           contract.Message[contract.Success],
-		"tempVideoFile": videoDataBase64,
-		"videoID":       insertVideo.VID,
-		"videoData":     insertVideo.VideoData,
+		"status":          contract.Success,
+		"msg":             contract.Message[contract.Success],
+		"videoDataBase64": videoDataBase64,
+		"videoID":         insertVideo.VID,
 	})
 }
