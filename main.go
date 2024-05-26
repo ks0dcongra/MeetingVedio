@@ -11,7 +11,7 @@ import (
 func main() {
 	database.MongoDBinit()
 	database.RedisDBinit()
-	
+
 	mainServer := gin.New()
 
 	routes.ApiRoutes(mainServer)

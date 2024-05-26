@@ -7,7 +7,6 @@ import (
 
 var QmgoConnection *qmgo.QmgoClient
 
-
 func MongoDBinit() {
 	var err error
 	ctx := context.TODO()

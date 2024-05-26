@@ -42,7 +42,7 @@ func (vs *VideoService) GetVideoFile(videoID primitive.ObjectID, GIFTag string) 
 		log.Println("write file fail:", err)
 		return "", err
 	}
-	
+
 	if GIFTag != "" {
 		randomFilePath, err := convertGIF(tempFile.Name())
 		if err != nil {
@@ -51,7 +51,7 @@ func (vs *VideoService) GetVideoFile(videoID primitive.ObjectID, GIFTag string) 
 		}
 		tempFile.Close()
 		os.Remove(tempFile.Name())
-	
+
 		return randomFilePath, nil
 	}
 

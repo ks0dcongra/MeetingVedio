@@ -8,7 +8,7 @@ import (
 
 var RedisConn *redis.Client
 
-func RedisDBinit(){
+func RedisDBinit() {
 	RedisConn = redis.NewClient(&redis.Options{
 		Addr:     "redis:6379",
 		Password: "",
