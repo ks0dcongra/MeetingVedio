@@ -62,16 +62,22 @@ func (vc *VideoController) DownloadVideo(c *gin.Context) {
 }
 
 func (vc *VideoController) UploadVideo(c *gin.Context) {
-	// ============================== Get upload file ==============================
-	// maximum upload of 10 MB files
-	c.Request.ParseMultipartForm(10 << 20)
-
 	// get the upload file
-	file, _, err := c.Request.FormFile("myFile")
+	file, header, err := c.Request.FormFile("myFile")
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index.html", gin.H{
 			"status": contract.ERROR_Upload_Video_NotExist,
 			"msg":    contract.Message[contract.ERROR_Upload_Video_NotExist],
+		})
+		return
+	}
+
+	maxSize := int64(30 << 20)
+
+	if header.Size > maxSize {
+		c.HTML(http.StatusBadRequest, "index.html", gin.H{
+			"status": contract.ERROR_Upload_Video_FileTooLarge,
+			"msg":    contract.Message[contract.ERROR_Upload_Video_FileTooLarge],
 		})
 		return
 	}
