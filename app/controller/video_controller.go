@@ -56,6 +56,10 @@ func (vc *VideoController) DownloadVideo(c *gin.Context) {
 	filePath = filePath[2:]
 	c.Header("Content-Disposition", "attachment; filename="+filePath)
 	c.Header("Content-Type", "video/mp4")
+	c.Header("Content-Transfer-Encoding", "binary")
+    c.Header("Expires", "0")
+    c.Header("Cache-Control", "must-revalidate")
+    c.Header("Pragma", "public")
 	c.File(filePath)
 
 	c.HTML(http.StatusOK, "index.html", gin.H{})
