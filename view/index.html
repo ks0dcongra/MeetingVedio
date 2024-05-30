@@ -28,6 +28,10 @@
             </div>
             <div class="ts-grid is-relaxed is-stretched u-top-spaced">
                 <div class="column is-9-wide">
+                    <div class="u-top-spaced">
+                        <div class="ts-header is-heavy is-center-aligned">影片預覽 Video Preview</div>
+                    </div>   
+                    <br     />
                     <video width="100%" height="100%" id="{{ .videoID }}" controls>
                         <source src="data:video/mp4;base64,{{ .videoDataBase64 }}" type="video/mp4">
                         Your browser does not support the video tag.
@@ -38,16 +42,17 @@
                     <div class="ts-segment is-padded is-secondary">
                         <div class="ts-header is-heavy is-center-aligned">上傳影片 Upload Video&nbsp;<span style="color: red;">(upload limit is 30MB)</span></div>
                         <!-- 上傳影片按鈕 -->
-                        <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
-                            <div class="ts-wrap u-top-spaced is-short ts-button">
-                                <label for="file-upload" class="custom-file-upload is-circular">
-                                    <span class="ts-icon is-video-icon "></span> <span class="cursor">Upload Video</span>
-                                </label>
-                                <input id="file-upload" type="file" name="myFile" />
-                            </div>
-                        </form>
+                        <label for="file-upload" class="custom-file-upload is-circular">
+                            <form id="upload-form" enctype="multipart/form-data" action="/upload" method="post">
+                                <div class="ts-wrap u-top-spaced is-short ts-button">
+                                       <span class="cursor"><span class="ts-icon is-video-icon "></span> Upload Video</span>
+                                    
+                                        <input id="file-upload" type="file" name="myFile" />
+                                </div>
+                            </form>
+                        </label>
                         <br />
-                        <div class="ts-header is-heavy is-center-aligned">下載影片 Download Video</div>
+                        <div class="ts-header is-heavy is-center-aligned">下載 Download</div>
                         
                         <div class="ts-wrap u-top-spaced is-short ts-button" onclick="submitVideoForm()">
                             <label class="is-circular">
@@ -56,7 +61,7 @@
                         </div>
                   
                         <br />
-                        <div class="ts-header is-heavy is-center-aligned">下載GIF Download GIF</div>
+                        <div class="ts-header is-heavy is-center-aligned">下載GIF Download .GIF</div>
                         
                         <div class="ts-wrap u-top-spaced is-short ts-button" onclick="submitGIFForm()">
                             <label class="is-circular">
@@ -98,14 +103,21 @@
         </div>   
         <div class="u-top-spaced is-center-aligned">
             <div class="ts-header is-heavy is-center-aligned">   
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/-uX-IIlHdxk?si=wuE_wC7EIi6WLdvR" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/-uX-IIlHdxk?si=EkpSwMcCvsWLnYLE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
-        </div>    
+        </div>  
+        <br />
         <div class="u-top-spaced">
-            <div class="ts-header is-heavy is-center-aligned">My Github URL</div>
+            <div class="ts-header is-heavy is-center-aligned">Download OBS Virtual Camera 下載OBS虛擬相機</div>
         </div>   
         <div class="ts-text is-center-aligned u-top-spaced"> 
-            <a href="https://github.com/ks0dcongra/MeetingVideoHelper">My github repo</a>
+            <a href="https://obsproject.com/" style="color:blue">Download OBS</a>
+        </div>    
+        <div class="u-top-spaced">
+            <div class="ts-header is-heavy is-center-aligned">My Github URL 我的專案連結</div>
+        </div>   
+        <div class="ts-text is-center-aligned u-top-spaced"> 
+            <a href="https://github.com/ks0dcongra/MeetingVideoHelper" style="color:blue">My github repo</a>
         </div>
         <footer class="ts-text is-center-aligned is-description u-top-spaced">
             <p>&copy; 2024 MeetingVedioHelper. All rights reserved.</p>
